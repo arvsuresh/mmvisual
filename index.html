@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Neuropsychological Tests</title>
   <style>
     body {
@@ -80,6 +81,36 @@
       font-size: 16px;
       margin-right: 8px;
       cursor: pointer;
+    }
+
+    /* Mobile-friendly adjustments */
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+        font-size: 16px;
+      }
+      .nav-button {
+        padding: 8px 12px;
+        font-size: 14px;
+        margin: 5px 5px 5px 0;
+      }
+      .section {
+        margin-top: 15px;
+        padding: 8px;
+      }
+      #digitDisplay {
+        font-size: 36px;
+        min-height: 50px;
+        margin: 15px 0;
+      }
+      .stroop-table td {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+      }
+      .small-heading {
+        font-size: 0.9em;
+      }
     }
   </style>
 </head>

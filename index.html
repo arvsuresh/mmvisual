@@ -73,14 +73,7 @@
     .incorrect {
       background-color: #ffcdd2; /* light red */
     }
-    #stroopResponses {
-      margin-top: 10px;
-      padding: 5px;
-      background: #f9f9f9;
-      border: 1px solid #ccc;
-      border-radius: 3px;
-    }
-    /* Stroop Answer Buttons */
+    /* Stroop responses and buttons */
     #stroopButtons {
       margin-top: 10px;
     }
@@ -90,7 +83,13 @@
       margin-right: 8px;
       cursor: pointer;
     }
-
+    #stroopResponses {
+      margin-top: 10px;
+      padding: 5px;
+      background: #f9f9f9;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
     /* Mobile-friendly adjustments */
     @media (max-width: 600px) {
       body {
@@ -172,13 +171,13 @@
     <div id="stroopTestArea" class="hidden">
       <p>Time remaining: <span id="stroopTimer">30</span> seconds</p>
       <div id="stroopGridContainer"></div>
-      <div id="stroopResponses">Responses: </div>
       <div id="stroopButtons">
         <button class="stroop-choice" data-color="red">Red</button>
         <button class="stroop-choice" data-color="blue">Blue</button>
         <button class="stroop-choice" data-color="green">Green</button>
         <button class="stroop-choice" data-color="yellow">Yellow</button>
       </div>
+      <div id="stroopResponses">Responses: </div>
     </div>
     <button id="endStroopTestButton" class="hidden nav-button">End Stroop Test</button>
     <button id="restartStroopTest" class="hidden nav-button">Restart Stroop Test</button>

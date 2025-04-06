@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Neuropsychological Tests</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Mobile optimization -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"> <!-- Mobile viewport -->
+  
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -16,25 +17,26 @@
     }
 
     .nav-button {
-      margin: 0 10px 10px 0;
-      padding: 10px 20px;
-      font-size: 16px;
+      margin: 10px 0;
+      padding: 12px 20px;
+      font-size: 18px;
       cursor: pointer;
     }
 
     .section {
       margin-top: 20px;
-      padding: 10px;
+      padding: 15px;
       border: 1px solid #ccc;
       border-radius: 5px;
     }
 
     h1 {
       margin-bottom: 0;
+      font-size: 32px;
     }
 
     .small-heading {
-      font-size: 0.8em;
+      font-size: 0.9em;
       color: #555;
       margin-top: 0;
       margin-bottom: 20px;
@@ -47,9 +49,18 @@
       min-height: 60px;
     }
 
+    input[type="text"] {
+      padding: 10px;
+      font-size: 18px;
+      width: 100%;
+      margin: 10px 0;
+      box-sizing: border-box;
+    }
+
     .stroop-table {
       border-collapse: collapse;
       margin-top: 10px;
+      width: 100%;
     }
 
     .stroop-table td {
@@ -57,7 +68,7 @@
       text-align: center;
       width: 60px;
       height: 60px;
-      font-size: 18px;
+      font-size: 20px;
       outline: none;
     }
 
@@ -79,95 +90,107 @@
       background: #f9f9f9;
       border: 1px solid #ccc;
       border-radius: 3px;
+      font-size: 18px;
     }
 
     #stroopButtons {
       margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     #stroopButtons button {
-      padding: 8px 16px;
-      font-size: 16px;
-      margin-right: 8px;
+      flex: 1 1 45%;
+      padding: 14px;
+      font-size: 18px;
       cursor: pointer;
     }
 
-    /* ====== MOBILE STYLES ====== */
+    /* ====== Mobile Styling ====== */
     @media only screen and (max-width: 600px) {
       body {
         padding: 10px;
+        font-size: 18px;
       }
 
       h1 {
-        font-size: 1.5em;
+        font-size: 26px;
         text-align: center;
       }
 
       .nav-button {
         display: block;
         width: 100%;
-        margin: 10px 0;
-        font-size: 18px;
+        font-size: 20px;
+        padding: 14px;
       }
 
-      .stroop-table td {
-        width: 40px;
-        height: 40px;
-        font-size: 14px;
+      .section {
+        padding: 12px;
       }
 
       #digitDisplay {
-        font-size: 32px;
+        font-size: 36px;
       }
 
-      #stroopButtons {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
+      input[type="text"] {
+        font-size: 20px;
+        padding: 14px;
+      }
+
+      .stroop-table td {
+        width: 45px;
+        height: 45px;
+        font-size: 16px;
       }
 
       #stroopButtons button {
-        margin: 6px;
-        width: 40%;
+        width: 48%;
+        padding: 14px;
+        font-size: 18px;
+      }
+
+      #stroopResponses {
+        font-size: 16px;
       }
     }
   </style>
 </head>
+
 <body>
   <h1>Neuropsychological Tests</h1>
   <p class="small-heading">Copyright (C) 2025 by University of California, San Francisco. All Rights Reserved.</p>
 
+  <!-- Navigation Buttons -->
   <button id="digitNav" class="nav-button">Digit Span Backwards</button>
   <button id="stroopNav" class="nav-button">Stroop Test</button>
 
   <!-- Digit Span Section -->
   <div id="digitSection" class="section hidden">
     <h2>Digit Span Backwards</h2>
-    <p>Press "Start" to display a sequence of digits. Memorize the sequence and type it in reverse order.</p>
+    <p><strong>Instructions:</strong> Memorize the sequence of digits, then type them in reverse order.</p>
+    <p><em>Example:</em> "If the numbers are 2-7-3, then you enter 3-7-2."</p>
     <div id="digitDisplay"></div>
-    <button onclick="startDigitSpan()">Start</button>
+    <button onclick="startDigitSpan()" class="nav-button">Start</button>
     <input type="text" id="digitInput" placeholder="Type reverse sequence" onkeydown="if(event.key==='Enter') checkDigitSpan()">
-    <button onclick="checkDigitSpan()">Submit</button>
+    <button onclick="checkDigitSpan()" class="nav-button">Submit</button>
     <div id="digitResult"></div>
   </div>
 
   <!-- Stroop Test Section -->
   <div id="stroopSection" class="section hidden">
     <h2>Stroop Test</h2>
-    <p>Read the word and ignore the font color. Type the word shown.</p>
-    <table class="stroop-table" id="stroopTable">
-      <tr>
-        <td id="cell0"></td>
-        <td id="cell1"></td>
-        <td id="cell2"></td>
-      </tr>
-    </table>
-    <input type="text" id="stroopInput" onkeydown="if(event.key==='Enter') checkStroopInput()">
+    <p><strong>Instructions:</strong> Identify the ink color of the word, not the word itself.</p>
+    <div id="stroopGridContainer"></div>
     <div id="stroopResponses"></div>
     <div id="stroopButtons">
-      <button onclick="startStroop()">Start</button>
-      <button onclick="resetStroop()">Reset</button>
+      <button onclick="handleStroop('red')">Red</button>
+      <button onclick="handleStroop('green')">Green</button>
+      <button onclick="handleStroop('blue')">Blue</button>
+      <button onclick="handleStroop('yellow')">Yellow</button>
     </div>
+    <button onclick="startStroop()" class="nav-button">Start Stroop Test</button>
   </div>
 
   <script>
@@ -183,99 +206,72 @@
     };
 
     // Digit Span Backwards
-    const digits = [1, 3, 7, 9, 2];
+    let digitSequence = [];
+
     function startDigitSpan() {
-      document.getElementById("digitDisplay").textContent = digits.join(" ");
+      digitSequence = Array.from({length: 3 + Math.floor(Math.random() * 5)}, () => Math.floor(Math.random() * 10));
+      document.getElementById("digitDisplay").textContent = digitSequence.join(" ");
       setTimeout(() => {
         document.getElementById("digitDisplay").textContent = "";
       }, 2000);
     }
 
     function checkDigitSpan() {
-      const userInput = document.getElementById("digitInput").value.trim();
-      const correctAnswer = [...digits].reverse().join("");
+      const userInput = document.getElementById("digitInput").value.trim().replace(/\D/g, "");
+      const correctAnswer = digitSequence.slice().reverse().join("");
       const resultEl = document.getElementById("digitResult");
       if (userInput === correctAnswer) {
-        resultEl.textContent = "Correct!";
-        resultEl.style.color = "green";
+        resultEl.innerHTML = "<span style='color:green'>Correct!</span>";
       } else {
-        resultEl.textContent = `Incorrect. Correct answer was: ${correctAnswer}`;
-        resultEl.style.color = "red";
+        resultEl.innerHTML = `<span style='color:red'>Incorrect. Correct was ${correctAnswer}</span>`;
       }
     }
 
     // Stroop Test
-    const words = ["RED", "GREEN", "BLUE"];
+    let stroopWords = [];
     let currentIndex = 0;
 
     function startStroop() {
-      currentIndex = 0;
-      updateStroopCell();
-      document.getElementById("stroopResponses").innerHTML = "";
-      document.getElementById("stroopInput").value = "";
-    }
-
-    function updateStroopCell() {
-      for (let i = 0; i < 3; i++) {
-        const cell = document.getElementById(`cell${i}`);
-        cell.textContent = "";
-        cell.classList.remove("current-cell");
+      stroopWords = [];
+      const colors = ["red", "green", "blue", "yellow"];
+      let html = "<table class='stroop-table'>";
+      for (let i = 0; i < 5; i++) {
+        html += "<tr>";
+        for (let j = 0; j < 3; j++) {
+          const word = colors[Math.floor(Math.random() * colors.length)];
+          const color = colors[Math.floor(Math.random() * colors.length)];
+          stroopWords.push({word, color});
+          const cellId = `cell${stroopWords.length-1}`;
+          html += `<td id="${cellId}" style="color:${color};">${word.toUpperCase()}</td>`;
+        }
+        html += "</tr>";
       }
-      const cell = document.getElementById(`cell${currentIndex}`);
-      const word = words[Math.floor(Math.random() * words.length)];
-      const color = ["red", "green", "blue"][Math.floor(Math.random() * 3)];
-      cell.textContent = word;
-      cell.style.color = color;
-      cell.dataset.correct = word;
-      cell.classList.add("current-cell");
+      html += "</table>";
+      document.getElementById("stroopGridContainer").innerHTML = html;
+      currentIndex = 0;
+      highlightCurrent();
     }
 
-    function checkStroopInput() {
-      const input = document.getElementById("stroopInput").value.toUpperCase().trim();
+    function highlightCurrent() {
+      document.querySelectorAll(".stroop-table td").forEach(td => td.classList.remove("current-cell"));
       const cell = document.getElementById(`cell${currentIndex}`);
-      const correct = cell.dataset.correct;
+      if (cell) cell.classList.add("current-cell");
+    }
+
+    function handleStroop(selectedColor) {
+      if (currentIndex >= stroopWords.length) return;
+      const expectedColor = document.getElementById(`cell${currentIndex}`).style.color;
+      const correct = expectedColor.includes(selectedColor);
       const responseDiv = document.getElementById("stroopResponses");
-
-      if (input === correct) {
-        cell.classList.add("correct");
+      responseDiv.innerHTML += `<p>Item ${currentIndex+1}: ${correct ? "Correct" : "Incorrect"}</p>`;
+      if (correct) {
+        document.getElementById(`cell${currentIndex}`).classList.add("correct");
       } else {
-        cell.classList.add("incorrect");
+        document.getElementById(`cell${currentIndex}`).classList.add("incorrect");
       }
-
-      responseDiv.innerHTML += `<p>Trial ${currentIndex + 1}: You typed "${input}". Correct: "${correct}".</p>`;
-
       currentIndex++;
-      if (currentIndex < 3) {
-        updateStroopCell();
-        document.getElementById("stroopInput").value = "";
-      } else {
-        document.getElementById("stroopInput").value = "";
-        document.getElementById("stroopInput").disabled = true;
-        responseDiv.innerHTML += "<p><strong>Test complete.</strong></p>";
-      }
+      highlightCurrent();
     }
-
-    function resetStroop() {
-      for (let i = 0; i < 3; i++) {
-        const cell = document.getElementById(`cell${i}`);
-        cell.textContent = "";
-        cell.style.color = "";
-        cell.classList.remove("correct", "incorrect", "current-cell");
-      }
-      document.getElementById("stroopResponses").innerHTML = "";
-      document.getElementById("stroopInput").disabled = false;
-      document.getElementById("stroopInput").value = "";
-      currentIndex = 0;
-    }
-
-    // Mobile Detection
-    document.addEventListener("DOMContentLoaded", function () {
-      const isMobile = /iPhone|iPad|iPod|Android|webOS/i.test(navigator.userAgent);
-      if (isMobile) {
-        console.log("Mobile device detected – applying mobile layout optimizations.");
-        document.body.classList.add("mobile-layout");
-      }
-    });
   </script>
 </body>
 </html>

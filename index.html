@@ -165,7 +165,7 @@
   <div id="stroopSection" class="section hidden">
     <h2>Stroop Test</h2>
     <p id="stroopInstructions">
-      <strong>Instructions:</strong> Click the button corresponding to the <em>color of the ink</em> in which each word is printed — not what the word reads. The items are arranged in a grid (9 rows and 5 columns) and must be answered in reading order (left-to-right, then top-to-bottom). You will have <strong>30 seconds</strong> to complete as many items as possible. The app will automatically validate each response. The current cell is highlighted with a thick black outline. If the cell turns red, try again; if you get it wrong twice, the test moves on.
+      <strong>Instructions:</strong> Click the button corresponding to the <em>color of the ink</em> in which each word is printed — not what the word reads. The items are arranged in a grid (9 rows and 5 columns) and must be answered in reading order (left-to-right, then top-to-bottom). You will have <strong>30 seconds</strong> to complete as many items as possible. Only cells highlighted in green (correct answers) are counted towards your final score.
     </p>
     <button id="startStroopTest" class="nav-button">Start Stroop Test</button>
     
@@ -366,6 +366,7 @@
       let currentStroopIndex = 0;
       let stroopResponses = [];
       let currentCellAttempts = 0;
+      let stroopScore = 0;
       let stroopTimer;
       
       function updateCurrentCellHighlight() {
@@ -394,6 +395,7 @@
               cell.classList.add("correct");
             }
             stroopResponses.push("Cell " + (currentStroopIndex + 1) + ": " + selectedColor + " (correct)");
+            stroopScore++; // Increase score only when correct
             currentStroopIndex++;
             currentCellAttempts = 0;
             updateCurrentCellHighlight();
@@ -441,7 +443,7 @@
       
       function startStroopTest() {
         document.getElementById("stroopInstructions").innerHTML =
-          "<strong>Instructions:</strong> Click the button corresponding to the <em>color of the ink</em> in which each word is printed — not what the word reads. The grid has 9 rows and 5 columns, answered in reading order. You have 30 seconds. The current cell is highlighted with a thick black outline. If you get it wrong twice, the test moves on.";
+          "<strong>Instructions:</strong> Click the button corresponding to the <em>color of the ink</em> in which each word is printed — not what the word reads. The grid has 9 rows and 5 columns, answered in reading order. You have 30 seconds. Only cells highlighted in green (correct answers) are counted towards your final score.";
           
         timeLeft = stroopTime;
         stroopTimerSpan.textContent = timeLeft;
@@ -449,6 +451,7 @@
         stroopResponsesDiv.innerText = "Responses: ";
         currentStroopIndex = 0;
         currentCellAttempts = 0;
+        stroopScore = 0;
         stroopGridContainer.innerHTML = generateStroopGrid();
         stroopTestArea.classList.remove("hidden");
         endStroopTestButton.classList.remove("hidden");
@@ -470,7 +473,7 @@
         stroopGridContainer.innerHTML = "";
         endStroopTestButton.classList.add("hidden");
         let finalScoreMessage = document.createElement("p");
-        finalScoreMessage.innerHTML = "<strong>Your final score is " + currentStroopIndex + ".</strong>";
+        finalScoreMessage.innerHTML = "<strong>Your final score is " + stroopScore + ".</strong>";
         stroopTestArea.appendChild(finalScoreMessage);
         restartStroopTestButton.classList.remove("hidden");
       }
@@ -479,7 +482,7 @@
         stroopTestArea.classList.add("hidden");
         stroopResponsesDiv.innerText = "Responses: ";
         document.getElementById("stroopInstructions").innerHTML =
-          "<strong>Instructions:</strong> Click the button corresponding to the <em>color of the ink</em> in which each word is printed — not what the word reads. The grid has 9 rows and 5 columns, answered in reading order. You have 30 seconds. The current cell is highlighted with a thick black outline. If you get it wrong twice, the test moves on.";
+          "<strong>Instructions:</strong> Click the button corresponding to the <em>color of the ink</em> in which each word is printed — not what the word reads. The grid has 9 rows and 5 columns, answered in reading order. You have 30 seconds. Only cells highlighted in green (correct answers) are counted towards your final score.";
         restartStroopTestButton.classList.add("hidden");
       }
       

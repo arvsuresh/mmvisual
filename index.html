@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Neuropsychological Tests</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"> <!-- Mobile viewport -->
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -21,6 +20,7 @@
       padding: 12px 20px;
       font-size: 18px;
       cursor: pointer;
+      width: 100%;
     }
 
     .section {
@@ -31,8 +31,9 @@
     }
 
     h1 {
-      margin-bottom: 0;
       font-size: 32px;
+      text-align: center;
+      margin-bottom: 0;
     }
 
     .small-heading {
@@ -40,6 +41,7 @@
       color: #555;
       margin-top: 0;
       margin-bottom: 20px;
+      text-align: center;
     }
 
     #digitDisplay {
@@ -49,11 +51,11 @@
       min-height: 60px;
     }
 
-    input[type="text"] {
-      padding: 10px;
-      font-size: 18px;
+    input[type="text"], #digitAnswer {
       width: 100%;
-      margin: 10px 0;
+      padding: 14px;
+      font-size: 18px;
+      margin-top: 10px;
       box-sizing: border-box;
     }
 
@@ -66,9 +68,9 @@
     .stroop-table td {
       border: 1px solid #ccc;
       text-align: center;
-      width: 60px;
-      height: 60px;
-      font-size: 20px;
+      width: 50px;
+      height: 50px;
+      font-size: 18px;
       outline: none;
     }
 
@@ -86,10 +88,10 @@
 
     #stroopResponses {
       margin-top: 10px;
-      padding: 5px;
+      padding: 10px;
       background: #f9f9f9;
       border: 1px solid #ccc;
-      border-radius: 3px;
+      border-radius: 5px;
       font-size: 18px;
     }
 
@@ -98,6 +100,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
+      justify-content: center;
     }
 
     #stroopButtons button {
@@ -107,52 +110,27 @@
       cursor: pointer;
     }
 
-    /* ====== Mobile Styling ====== */
+    /* Mobile-specific tweaks */
     @media only screen and (max-width: 600px) {
-      body {
-        padding: 10px;
-        font-size: 18px;
-      }
-
       h1 {
         font-size: 26px;
-        text-align: center;
       }
-
-      .nav-button {
-        display: block;
-        width: 100%;
-        font-size: 20px;
-        padding: 14px;
+      .stroop-table td {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
       }
-
-      .section {
-        padding: 12px;
-      }
-
       #digitDisplay {
         font-size: 36px;
       }
-
-      input[type="text"] {
-        font-size: 20px;
-        padding: 14px;
-      }
-
-      .stroop-table td {
-        width: 45px;
-        height: 45px;
-        font-size: 16px;
-      }
-
-      #stroopButtons button {
-        width: 48%;
-        padding: 14px;
-        font-size: 18px;
-      }
-
       #stroopResponses {
         font-size: 16px;
+      }
+      .nav-button {
+        font-size: 20px;
+      }
+      #stroopButtons button {
+        font-size: 18px;
       }
     }
   </style>
@@ -162,116 +140,302 @@
   <h1>Neuropsychological Tests</h1>
   <p class="small-heading">Copyright (C) 2025 by University of California, San Francisco. All Rights Reserved.</p>
 
-  <!-- Navigation Buttons -->
   <button id="digitNav" class="nav-button">Digit Span Backwards</button>
   <button id="stroopNav" class="nav-button">Stroop Test</button>
 
-  <!-- Digit Span Section -->
+  <!-- DIGIT SPAN BACKWARDS SECTION -->
   <div id="digitSection" class="section hidden">
-    <h2>Digit Span Backwards</h2>
-    <p><strong>Instructions:</strong> Memorize the sequence of digits, then type them in reverse order.</p>
+    <h2>Digit Span Backwards Test</h2>
+    <p><strong>Instructions:</strong> You will be presented a series of numbers (approximately 1 second per number). Please repeat the sequence in backwards order. If your answer is incorrect, you will be given a second chance at the same difficulty level. Your score is the highest series (number of digits) repeated correctly minus 1. Enter your answer in the text box provided.</p>
     <p><em>Example:</em> "If the numbers are 2-7-3, then you enter 3-7-2."</p>
-    <div id="digitDisplay"></div>
-    <button onclick="startDigitSpan()" class="nav-button">Start</button>
-    <input type="text" id="digitInput" placeholder="Type reverse sequence" onkeydown="if(event.key==='Enter') checkDigitSpan()">
-    <button onclick="checkDigitSpan()" class="nav-button">Submit</button>
-    <div id="digitResult"></div>
+
+    <button id="startDigitTest" class="nav-button">Start Digit Span Test</button>
+
+    <div id="digitTestArea" class="hidden">
+      <p id="digitLevelDisplay"></p>
+      <div id="digitDisplay"></div>
+      <div id="digitInputArea" class="hidden">
+        <input type="text" id="digitAnswer" placeholder="Enter reversed sequence (e.g., 3-7-2)">
+        <button id="submitDigitAnswer" class="nav-button">Submit Answer</button>
+      </div>
+      <p id="digitMessage"></p>
+    </div>
+
+    <button id="restartDigitTest" class="hidden nav-button">Restart Digit Span Test</button>
   </div>
 
-  <!-- Stroop Test Section -->
+  <!-- STROOP TEST SECTION -->
   <div id="stroopSection" class="section hidden">
     <h2>Stroop Test</h2>
-    <p><strong>Instructions:</strong> Identify the ink color of the word, not the word itself.</p>
-    <div id="stroopGridContainer"></div>
-    <div id="stroopResponses"></div>
-    <div id="stroopButtons">
-      <button onclick="handleStroop('red')">Red</button>
-      <button onclick="handleStroop('green')">Green</button>
-      <button onclick="handleStroop('blue')">Blue</button>
-      <button onclick="handleStroop('yellow')">Yellow</button>
+    <p id="stroopInstructions">
+      <strong>Instructions:</strong> Click the button corresponding to the <em>color of the ink</em> in which each word is printed — not what the word reads. The items are arranged in a grid (9 rows and 5 columns) and must be answered in reading order. You will have <strong>30 seconds</strong> to complete as many items as possible. The app will automatically validate each response. The current cell is highlighted with a thick black outline.
+    </p>
+    <button id="startStroopTest" class="nav-button">Start Stroop Test</button>
+
+    <div id="stroopTestArea" class="hidden">
+      <p>Time remaining: <span id="stroopTimer">30</span> seconds</p>
+      <div id="stroopGridContainer"></div>
+      <div id="stroopResponses">Responses: </div>
+      <div id="stroopButtons">
+        <button class="stroop-choice" data-color="red">Red</button>
+        <button class="stroop-choice" data-color="blue">Blue</button>
+        <button class="stroop-choice" data-color="green">Green</button>
+        <button class="stroop-choice" data-color="yellow">Yellow</button>
+      </div>
     </div>
-    <button onclick="startStroop()" class="nav-button">Start Stroop Test</button>
+
+    <button id="endStroopTestButton" class="hidden nav-button">End Stroop Test</button>
+    <button id="restartStroopTest" class="hidden nav-button">Restart Stroop Test</button>
   </div>
 
+  <!-- JavaScript section -->
   <script>
     // Navigation
-    document.getElementById("digitNav").onclick = () => {
-      document.getElementById("digitSection").classList.remove("hidden");
-      document.getElementById("stroopSection").classList.add("hidden");
-    };
+    const digitNav = document.getElementById("digitNav");
+    const stroopNav = document.getElementById("stroopNav");
+    const digitSection = document.getElementById("digitSection");
+    const stroopSection = document.getElementById("stroopSection");
 
-    document.getElementById("stroopNav").onclick = () => {
-      document.getElementById("stroopSection").classList.remove("hidden");
-      document.getElementById("digitSection").classList.add("hidden");
-    };
+    digitNav.addEventListener("click", function() {
+      digitSection.classList.remove("hidden");
+      stroopSection.classList.add("hidden");
+    });
 
-    // Digit Span Backwards
-    let digitSequence = [];
+    stroopNav.addEventListener("click", function() {
+      stroopSection.classList.remove("hidden");
+      digitSection.classList.add("hidden");
+    });
 
-    function startDigitSpan() {
-      digitSequence = Array.from({length: 3 + Math.floor(Math.random() * 5)}, () => Math.floor(Math.random() * 10));
-      document.getElementById("digitDisplay").textContent = digitSequence.join(" ");
-      setTimeout(() => {
-        document.getElementById("digitDisplay").textContent = "";
-      }, 2000);
+    // ===============================
+    // Digit Span Backwards Test Logic
+    // ===============================
+
+    let digitLevel = 2;
+    let currentAttempt = "primary";
+    let currentSequence = [];
+    let highestPassed = 0;
+    let digitInterval = 1000;
+
+    const startDigitButton = document.getElementById("startDigitTest");
+    const digitTestArea = document.getElementById("digitTestArea");
+    const digitLevelDisplay = document.getElementById("digitLevelDisplay");
+    const digitDisplay = document.getElementById("digitDisplay");
+    const digitInputArea = document.getElementById("digitInputArea");
+    const digitAnswerInput = document.getElementById("digitAnswer");
+    const submitDigitAnswerButton = document.getElementById("submitDigitAnswer");
+    const digitMessage = document.getElementById("digitMessage");
+    const restartDigitTestButton = document.getElementById("restartDigitTest");
+
+    startDigitButton.addEventListener("click", startDigitSpanTest);
+    submitDigitAnswerButton.addEventListener("click", checkDigitAnswer);
+    restartDigitTestButton.addEventListener("click", restartDigitSpanTest);
+
+    function startDigitSpanTest() {
+      digitLevel = 2;
+      currentAttempt = "primary";
+      highestPassed = 0;
+      digitMessage.textContent = "";
+      digitAnswerInput.value = "";
+      startDigitButton.classList.add("hidden");
+      digitTestArea.classList.remove("hidden");
+      restartDigitTestButton.classList.add("hidden");
+      startDigitRound();
     }
 
-    function checkDigitSpan() {
-      const userInput = document.getElementById("digitInput").value.trim().replace(/\D/g, "");
-      const correctAnswer = digitSequence.slice().reverse().join("");
-      const resultEl = document.getElementById("digitResult");
-      if (userInput === correctAnswer) {
-        resultEl.innerHTML = "<span style='color:green'>Correct!</span>";
+    function startDigitRound() {
+      digitLevelDisplay.textContent = "Current Digit Span Level: " + digitLevel + " (" + currentAttempt + ")";
+      digitMessage.textContent = "";
+      digitInputArea.classList.add("hidden");
+      digitAnswerInput.value = "";
+      currentSequence = generateDigitSequence(digitLevel);
+      playDigitSequence(currentSequence);
+    }
+
+    function generateDigitSequence(length) {
+      let seq = [];
+      for (let i = 0; i < length; i++) {
+        seq.push(Math.floor(Math.random() * 10));
+      }
+      return seq;
+    }
+
+    function playDigitSequence(seq) {
+      digitDisplay.textContent = "";
+      let index = 0;
+
+      function showNext() {
+        if (index < seq.length) {
+          digitDisplay.textContent = seq[index];
+          setTimeout(() => {
+            digitDisplay.textContent = "";
+            setTimeout(() => {
+              index++;
+              showNext();
+            }, digitInterval / 2);
+          }, digitInterval / 2);
+        } else {
+          digitDisplay.textContent = "";
+          digitInputArea.classList.remove("hidden");
+          digitAnswerInput.focus();
+        }
+      }
+      showNext();
+    }
+
+    function checkDigitAnswer() {
+      let userAnswer = digitAnswerInput.value.trim();
+      if (!userAnswer) return;
+      userAnswer = userAnswer.replace(/\D/g, ""); // keep only digits
+      let userDigits = userAnswer.split("");
+      let correctAnswer = [...currentSequence].reverse().map(String);
+
+      if (arraysEqual(userDigits, correctAnswer)) {
+        highestPassed = digitLevel;
+        if (digitLevel >= 8) {
+          digitMessage.innerHTML = "<strong>Test complete. Your final score is " + (highestPassed - 1) + ".</strong>";
+          digitInputArea.classList.add("hidden");
+          restartDigitTestButton.classList.remove("hidden");
+          return;
+        }
+        digitMessage.textContent = "Correct!";
+        digitLevel++;
+        currentAttempt = "primary";
+        setTimeout(startDigitRound, 1500);
       } else {
-        resultEl.innerHTML = `<span style='color:red'>Incorrect. Correct was ${correctAnswer}</span>`;
+        if (currentAttempt === "primary") {
+          digitMessage.textContent = "Incorrect. Trying alternate sequence for this level.";
+          currentAttempt = "alternative";
+          setTimeout(startDigitRound, 1500);
+        } else {
+          digitMessage.innerHTML = "<strong>Test over. Your final score is " + (highestPassed - 1) + ".</strong>";
+          digitInputArea.classList.add("hidden");
+          restartDigitTestButton.classList.remove("hidden");
+        }
       }
     }
 
-    // Stroop Test
-    let stroopWords = [];
-    let currentIndex = 0;
+    function arraysEqual(a, b) {
+      if (a.length !== b.length) return false;
+      for (let i = 0; i < a.length; i++) {
+        if (a[i] !== b[i]) return false;
+      }
+      return true;
+    }
 
-    function startStroop() {
-      stroopWords = [];
-      const colors = ["red", "green", "blue", "yellow"];
+    function restartDigitSpanTest() {
+      startDigitButton.classList.remove("hidden");
+      digitTestArea.classList.add("hidden");
+      digitDisplay.textContent = "";
+      digitMessage.textContent = "";
+    }
+
+    // ===============================
+    // Stroop Test Logic
+    // ===============================
+
+    const startStroopButton = document.getElementById("startStroopTest");
+    const stroopTestArea = document.getElementById("stroopTestArea");
+    const stroopTimerSpan = document.getElementById("stroopTimer");
+    const stroopGridContainer = document.getElementById("stroopGridContainer");
+    const stroopResponsesDiv = document.getElementById("stroopResponses");
+    const endStroopTestButton = document.getElementById("endStroopTestButton");
+    const restartStroopTestButton = document.getElementById("restartStroopTest");
+
+    let stroopExpectedAnswers = [];
+    let currentStroopIndex = 0;
+    let currentCellAttempts = 0;
+    let stroopTimer;
+    let timeLeft = 30;
+
+    const stroopChoiceButtons = document.querySelectorAll(".stroop-choice");
+    stroopChoiceButtons.forEach(button => {
+      button.addEventListener("click", function() {
+        handleStroopChoice(this.getAttribute("data-color"));
+      });
+    });
+
+    function startStroopTest() {
+      stroopGridContainer.innerHTML = generateStroopGrid();
+      stroopTestArea.classList.remove("hidden");
+      endStroopTestButton.classList.remove("hidden");
+      restartStroopTestButton.classList.add("hidden");
+      timeLeft = 30;
+      stroopTimerSpan.textContent = timeLeft;
+      currentStroopIndex = 0;
+      currentCellAttempts = 0;
+      stroopResponsesDiv.innerHTML = "Responses: ";
+      updateCurrentCellHighlight();
+
+      stroopTimer = setInterval(() => {
+        timeLeft--;
+        stroopTimerSpan.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(stroopTimer);
+          endStroopTest();
+        }
+      }, 1000);
+    }
+
+    function generateStroopGrid() {
+      const colors = ["red", "blue", "green", "yellow"];
+      stroopExpectedAnswers = [];
       let html = "<table class='stroop-table'>";
-      for (let i = 0; i < 5; i++) {
+      let cellIndex = 0;
+      for (let i = 0; i < 9; i++) {
         html += "<tr>";
-        for (let j = 0; j < 3; j++) {
-          const word = colors[Math.floor(Math.random() * colors.length)];
-          const color = colors[Math.floor(Math.random() * colors.length)];
-          stroopWords.push({word, color});
-          const cellId = `cell${stroopWords.length-1}`;
-          html += `<td id="${cellId}" style="color:${color};">${word.toUpperCase()}</td>`;
+        for (let j = 0; j < 5; j++) {
+          let word = colors[Math.floor(Math.random() * colors.length)];
+          let inkColor = colors.filter(c => c !== word)[Math.floor(Math.random() * 3)];
+          stroopExpectedAnswers.push(inkColor);
+          html += `<td id="cell-${cellIndex}" style="color:${inkColor};">${word.toUpperCase()}</td>`;
+          cellIndex++;
         }
         html += "</tr>";
       }
       html += "</table>";
-      document.getElementById("stroopGridContainer").innerHTML = html;
-      currentIndex = 0;
-      highlightCurrent();
+      return html;
     }
 
-    function highlightCurrent() {
+    function updateCurrentCellHighlight() {
       document.querySelectorAll(".stroop-table td").forEach(td => td.classList.remove("current-cell"));
-      const cell = document.getElementById(`cell${currentIndex}`);
+      const cell = document.getElementById("cell-" + currentStroopIndex);
       if (cell) cell.classList.add("current-cell");
     }
 
-    function handleStroop(selectedColor) {
-      if (currentIndex >= stroopWords.length) return;
-      const expectedColor = document.getElementById(`cell${currentIndex}`).style.color;
-      const correct = expectedColor.includes(selectedColor);
-      const responseDiv = document.getElementById("stroopResponses");
-      responseDiv.innerHTML += `<p>Item ${currentIndex+1}: ${correct ? "Correct" : "Incorrect"}</p>`;
-      if (correct) {
-        document.getElementById(`cell${currentIndex}`).classList.add("correct");
+    function handleStroopChoice(selectedColor) {
+      if (currentStroopIndex >= stroopExpectedAnswers.length) return;
+      const expectedColor = stroopExpectedAnswers[currentStroopIndex];
+
+      if (selectedColor.toLowerCase() === expectedColor.toLowerCase()) {
+        document.getElementById("cell-" + currentStroopIndex).classList.add("correct");
+        currentStroopIndex++;
+        currentCellAttempts = 0;
       } else {
-        document.getElementById(`cell${currentIndex}`).classList.add("incorrect");
+        currentCellAttempts++;
+        document.getElementById("cell-" + currentStroopIndex).classList.add("incorrect");
+        if (currentCellAttempts >= 2) {
+          currentStroopIndex++;
+          currentCellAttempts = 0;
+        }
       }
-      currentIndex++;
-      highlightCurrent();
+
+      updateCurrentCellHighlight();
     }
-  </script>
-</body>
-</html>
+
+    function endStroopTest() {
+      clearInterval(stroopTimer);
+      stroopGridContainer.innerHTML = "";
+      endStroopTestButton.classList.add("hidden");
+      restartStroopTestButton.classList.remove("hidden");
+      stroopResponsesDiv.innerHTML += "<p><strong>Final Score: " + currentStroopIndex + "</strong></p>";
+    }
+
+    function restartStroopTest() {
+      stroopTestArea.classList.add("hidden");
+      stroopResponsesDiv.innerHTML = "Responses: ";
+    }
+
+    endStroopTestButton.addEventListener("click", endStroopTest);
+    restartStroopTestButton.addEventListener("click", restartStroopTest);
+</script>
+

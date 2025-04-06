@@ -42,6 +42,14 @@
       margin: 20px 0;
       min-height: 60px; /* Reserve space */
     }
+    /* Styling for the input text box for digit span */
+    #digitAnswer {
+      font-size: 18px;
+      padding: 8px;
+      width: 100%;
+      max-width: 400px;
+      box-sizing: border-box;
+    }
     /* Stroop Grid Styles */
     .stroop-table {
       border-collapse: collapse;
@@ -55,9 +63,9 @@
       font-size: 18px;
       outline: none;
     }
-    /* Current cell: only outlined with thick black border */
+    /* Current cell: thick black outline (forced with !important) */
     .current-cell {
-      outline: 3px solid black;
+      outline: 3px solid black !important;
     }
     .correct {
       background-color: #c8e6c9; /* light green */
@@ -90,9 +98,14 @@
         font-size: 16px;
       }
       .nav-button {
-        padding: 8px 12px;
-        font-size: 14px;
-        margin: 5px 5px 5px 0;
+        padding: 16px 24px;
+        font-size: 18px;
+        margin: 8px 8px 8px 0;
+      }
+      #stroopButtons button {
+        padding: 16px 24px;
+        font-size: 18px;
+        margin: 8px 8px 8px 0;
       }
       .section {
         margin-top: 15px;
@@ -110,6 +123,11 @@
       }
       .small-heading {
         font-size: 0.9em;
+      }
+      /* Increase the digit answer input box size on mobile */
+      #digitAnswer {
+        font-size: 20px;
+        padding: 12px;
       }
     }
   </style>
@@ -135,7 +153,7 @@
       <p id="digitLevelDisplay"></p>
       <div id="digitDisplay"></div>
       <div id="digitInputArea" class="hidden">
-        <input type="text" id="digitAnswer" placeholder="Enter reversed sequence (e.g., 3-7-2)" size="30">
+        <input type="text" id="digitAnswer" placeholder="Enter reversed sequence (e.g., 3-7-2)" size="40">
         <button id="submitDigitAnswer" class="nav-button">Submit Answer</button>
       </div>
       <p id="digitMessage"></p>
@@ -285,7 +303,7 @@
         if (arraysEqual(userDigits, correctAnswer)) {
           highestPassed = digitLevel;
           if (digitLevel >= 8) {
-            digitMessage.innerHTML = "<strong>Test complete. Your final score is " + (highestPassed - 1) + ".</strong>";
+            digitMessage.innerHTML = "<strong>Test complete. Your final score is " + Math.max(highestPassed - 1, 0) + ".</strong>";
             digitInputArea.classList.add("hidden");
             restartDigitTestButton.classList.remove("hidden");
             return;
@@ -300,7 +318,7 @@
             currentAttempt = "alternative";
             setTimeout(startDigitRound, 1500);
           } else {
-            digitMessage.innerHTML = "<strong>Test over. Your final score is " + (highestPassed - 1) + ".</strong>";
+            digitMessage.innerHTML = "<strong>Test over. Your final score is " + Math.max(highestPassed - 1, 0) + ".</strong>";
             digitInputArea.classList.add("hidden");
             restartDigitTestButton.classList.remove("hidden");
           }
